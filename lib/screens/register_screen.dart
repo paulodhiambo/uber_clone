@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends StatelessWidget {
+class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +30,7 @@ class LoginScreen extends StatelessWidget {
             height: 15.0,
           ),
           Text(
-            "Login as a Rider",
+            "Register as a Rider",
             style: GoogleFonts.inter(
               fontWeight: FontWeight.w700,
               fontSize: 18,
@@ -73,6 +73,19 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelStyle: GoogleFonts.inter(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14.0,
+                    ),
+                    labelText: "Confirm password",
+                  ),
+                ),
+                SizedBox(
                   height: 30.0,
                 ),
                 MaterialButton(
@@ -80,14 +93,14 @@ class LoginScreen extends StatelessWidget {
                   padding: EdgeInsets.only(
                       left: 55.0, right: 55.0, top: 10.0, bottom: 10.0),
                   onPressed: () {
-                    print('Login Button Pressed');
+                    print('Register Button Pressed');
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   elevation: 10.0,
                   child: Text(
-                    "Login",
+                    "Register",
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w700,
                       fontSize: 18.0,
@@ -103,7 +116,7 @@ class LoginScreen extends StatelessWidget {
                     print("Clicked");
                   },
                   child: Text(
-                    "Don't have an account? Register",
+                    "Already have an account? Login",
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w400,
                       fontSize: 14.0,

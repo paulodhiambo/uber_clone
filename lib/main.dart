@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:uber_clone/screens/login_screen.dart';
-import 'package:uber_clone/screens/main_screen.dart';
 
 void main() {
   runApp(MyApp());
