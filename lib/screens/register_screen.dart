@@ -1,8 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uber_clone/screens/login_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
+  static const String idScreen = "register";
+  final TextEditingController nameTextEditingController =
+      TextEditingController();
+  final TextEditingController emailTextEditingController =
+      TextEditingController();
+  final TextEditingController phoneTextEditingController =
+      TextEditingController();
+  final TextEditingController passwordTextEditingController =
+      TextEditingController();
+  final TextEditingController confirmPasswordTextEditingController =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +59,7 @@ class RegisterScreen extends StatelessWidget {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: nameTextEditingController,
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                       labelStyle: GoogleFonts.inter(
@@ -64,6 +79,7 @@ class RegisterScreen extends StatelessWidget {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: emailTextEditingController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       labelStyle: GoogleFonts.inter(
@@ -83,6 +99,7 @@ class RegisterScreen extends StatelessWidget {
                     height: 10.0,
                   ),
                   TextFormField(
+                    controller: phoneTextEditingController,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       labelStyle: GoogleFonts.inter(
@@ -102,6 +119,7 @@ class RegisterScreen extends StatelessWidget {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: passwordTextEditingController,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelStyle: GoogleFonts.inter(
@@ -115,6 +133,7 @@ class RegisterScreen extends StatelessWidget {
                     height: 10.0,
                   ),
                   TextFormField(
+                    controller: confirmPasswordTextEditingController,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelStyle: GoogleFonts.inter(
@@ -132,7 +151,7 @@ class RegisterScreen extends StatelessWidget {
                     padding: EdgeInsets.only(
                         left: 55.0, right: 55.0, top: 10.0, bottom: 10.0),
                     onPressed: () {
-                      print('Register Button Pressed');
+                      return registerNewUser(context);
                     },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
@@ -152,7 +171,11 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      print("Clicked");
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        LoginScreen.idScreen,
+                        (route) => false,
+                      );
                     },
                     child: Text(
                       "Already have an account? Login",
@@ -169,5 +192,27 @@ class RegisterScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  final FirebaseAuth mAuth = FirebaseAuth.instance;
+
+  //Function to Register User with Email and Password
+  void registerNewUser(BuildContext buildContext) async {
+    if (passwordTextEditingController.text.toString() !=
+        confirmPasswordTextEditingController.text.toString()) {
+      //code
+    }
+    if (phoneTextEditingController.text.toString().length != 10) {
+      //code
+    }
+    if (nameTextEditingController.text.toString().length < 4) {
+      //code
+    }
+    final UserCredential firebaseUser =
+        (await mAuth.createUserWithEmailAndPassword(
+            email: emailTextEditingController.text.toString(),
+            password: passwordTextEditingController.text.toString()));
+    if (firebaseUser.user == null) {
+    } else {}
   }
 }

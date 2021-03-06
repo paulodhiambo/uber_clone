@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uber_clone/screens/register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const String idScreen = "login_screen";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +103,11 @@ class LoginScreen extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    print("Clicked");
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      RegisterScreen.idScreen,
+                      (route) => false,
+                    );
                   },
                   child: Text(
                     "Don't have an account? Register",

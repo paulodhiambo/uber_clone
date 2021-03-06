@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uber_clone/screens/login_screen.dart';
+import 'package:uber_clone/screens/main_screen.dart';
 import 'package:uber_clone/screens/register_screen.dart';
 
 void main() {
@@ -13,9 +14,15 @@ class MyApp extends StatelessWidget {
       title: 'Green Taxi',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity),
-      home: RegisterScreen(),
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      initialRoute: LoginScreen.idScreen,
+      routes: {
+        RegisterScreen.idScreen: (context) => RegisterScreen(),
+        LoginScreen.idScreen: (context) => LoginScreen(),
+        MainScreen.idScreen: (context) => MainScreen(),
+      },
     );
   }
 }
