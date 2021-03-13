@@ -1,11 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uber_clone/main.dart';
 import 'package:uber_clone/screens/login_screen.dart';
+import 'package:uber_clone/screens/main_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
   static const String idScreen = "register";
+  final FirebaseAuth mAuth = FirebaseAuth.instance;
   final TextEditingController nameTextEditingController =
       TextEditingController();
   final TextEditingController emailTextEditingController =
@@ -194,25 +198,49 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-  final FirebaseAuth mAuth = FirebaseAuth.instance;
-
   //Function to Register User with Email and Password
   void registerNewUser(BuildContext buildContext) async {
+    if (passwordTextEditingController.text.toString().length < 6) {
+      displayToast("Password should be at least 6 characters", buildContext);
+    }
     if (passwordTextEditingController.text.toString() !=
         confirmPasswordTextEditingController.text.toString()) {
-      //code
+      displayToast("Passwords must match", buildContext);
     }
     if (phoneTextEditingController.text.toString().length != 10) {
-      //code
+      displayToast("Phone number must be at least 10 characters", buildContext);
     }
     if (nameTextEditingController.text.toString().length < 4) {
-      //code
+      displayToast("Username must be at least 4 characters", buildContext);
     }
-    final UserCredential firebaseUser =
-        (await mAuth.createUserWithEmailAndPassword(
+    if (!emailTextEditingController.text.toString().contains("@")) {
+      displayToast("Input a valid email address", buildContext);
+    }
+    final UserCredential firebaseUser = (await mAuth
+        .createUserWithEmailAndPassword(
             email: emailTextEditingController.text.toString(),
-            password: passwordTextEditingController.text.toString()));
-    if (firebaseUser.user == null) {
-    } else {}
+            password: passwordTextEditingController.text.toString())
+        .catchError((error) {
+      displayToast(error.toString(), buildContext);
+    }));
+    if (firebaseUser.user != null) {
+      //Save user info firebase realtime database if user is not null
+      Map userMap = {
+        "name": nameTextEditingController.text.toString().trim(),
+        "email": emailTextEditingController.text.toString().trim(),
+        "phone": phoneTextEditingController.text.toString().trim()
+      };
+      userReference.child(firebaseUser.user.uid).set(userMap);
+      displayToast("User account created successfully", buildContext);
+      //Navigate to the home screen
+      Navigator.pushNamedAndRemoveUntil(
+          buildContext, MainScreen.idScreen, (route) => false);
+    } else {
+      displayToast("An error occurred", buildContext);
+    }
+  }
+
+  void displayToast(String message, BuildContext buildContext) {
+    Fluttertoast.showToast(msg: message);
   }
 }

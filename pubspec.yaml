@@ -33,6 +33,8 @@ dependencies:
   firebase_database: ^6.1.0
   flutter_svg: ^0.19.3
   google_fonts: ^2.0.0
+  fluttertoast: ^7.1.8
+  google_maps_flutter: ^2.0.1
 
 dev_dependencies:
   flutter_test:

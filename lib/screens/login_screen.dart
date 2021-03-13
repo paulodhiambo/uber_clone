@@ -1,10 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uber_clone/main.dart';
+import 'package:uber_clone/screens/main_screen.dart';
 import 'package:uber_clone/screens/register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String idScreen = "login_screen";
+  final TextEditingController emailTextEditingController =
+      TextEditingController();
+  final TextEditingController passwordTextEditingController =
+      TextEditingController();
+  final FirebaseAuth mAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +57,7 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               children: [
                 TextFormField(
+                  controller: emailTextEditingController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelStyle: GoogleFonts.inter(
@@ -66,6 +77,7 @@ class LoginScreen extends StatelessWidget {
                   height: 10.0,
                 ),
                 TextFormField(
+                  controller: passwordTextEditingController,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelStyle: GoogleFonts.inter(
@@ -83,7 +95,7 @@ class LoginScreen extends StatelessWidget {
                   padding: EdgeInsets.only(
                       left: 55.0, right: 55.0, top: 10.0, bottom: 10.0),
                   onPressed: () {
-                    print('Login Button Pressed');
+                    loginUserWithEmailAndPassword(context);
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
@@ -123,5 +135,40 @@ class LoginScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void loginUserWithEmailAndPassword(BuildContext context) async {
+    if (!emailTextEditingController.text.toString().contains("@")) {
+      displayToast("Input a valid email address", context);
+    }
+    if (passwordTextEditingController.text.toString().length < 6) {
+      displayToast("Password length should be at least 6 characters", context);
+    }
+    final UserCredential user = (await mAuth
+        .signInWithEmailAndPassword(
+            email: emailTextEditingController.text.toString(),
+            password: passwordTextEditingController.text.toString().trim())
+        .catchError((error) {
+      displayToast(error, context);
+    }));
+    if (user.user != null) {
+      userReference.child(user.user.uid).once().then((DataSnapshot snapShot) {
+        if (snapShot.value != null) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, MainScreen.idScreen, (route) => false);
+        } else {
+          mAuth.signOut();
+          displayToast("No user found", context);
+        }
+      });
+      Navigator.pushNamedAndRemoveUntil(
+          context, MainScreen.idScreen, (route) => false);
+    } else {
+      displayToast("Unable to login.", context);
+    }
+  }
+
+  void displayToast(String message, BuildContext context) {
+    Fluttertoast.showToast(msg: message);
   }
 }
